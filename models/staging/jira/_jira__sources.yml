@@ -8,8 +8,6 @@ sources:
       soft-deleted via `_matia_deleted`.
     database: MATIA_DATABASE
     schema: JIRA_V2_MCP_DEMO
-    loader: matia
-    loaded_at_field: _matia_synced
     tables:
       - name: issue
         description: >

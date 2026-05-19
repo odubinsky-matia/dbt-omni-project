@@ -7,8 +7,6 @@ sources:
       customer account and relationship data across the business.
     database: MATIA_DATABASE
     schema: SALESFORCE
-    loader: matia
-    loaded_at_field: _matia_synced
     tables:
       - name: account
         description: >

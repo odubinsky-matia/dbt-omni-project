@@ -8,8 +8,6 @@ sources:
       source file, and `_line` is the row number within that file.
     database: MATIA_DATABASE
     schema: GOOGLE_DRIVE
-    loader: matia
-    loaded_at_field: _matia_synced
     tables:
       - name: financials_jan24
         description: >

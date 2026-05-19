@@ -7,8 +7,6 @@ sources:
       reports used by the Customer Success and Product teams.
     database: MATIA_DATABASE
     schema: GOOGLE_SHEETS_MCP_DEMO
-    loader: matia
-    loaded_at_field: _matia_synced
     tables:
       - name: user_feedback_report
         description: >
