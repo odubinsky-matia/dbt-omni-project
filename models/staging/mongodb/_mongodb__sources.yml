@@ -7,8 +7,6 @@ sources:
       Contains operational collections such as user sessions.
     database: MATIA_DATABASE
     schema: MONGODB_V2
-    loader: matia
-    loaded_at_field: _matia_synced
     tables:
       - name: sessions
         description: >

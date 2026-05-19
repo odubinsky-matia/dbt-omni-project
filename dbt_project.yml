@@ -19,8 +19,7 @@ clean-targets:
 models:
   dbt_omni:
     staging:
-      +materialized: view
-      +schema: staging
+      +materialized: table
       jira:
         +tags: ["jira", "staging"]
       google_sheets:
@@ -36,7 +35,6 @@ models:
       +tags: ["intermediate"]
     marts:
       +materialized: table
-      +schema: marts
       customer_360:
         +tags: ["customer", "marts"]
       product:
