@@ -1,0 +1,92 @@
+version: 2
+
+models:
+  - name: int_customer_feedback_summary
+    description: >
+      Ephemeral model. One row per `customer_id` with aggregated feedback
+      metrics: total submissions, average rating, sentiment breakdown
+      (positive / neutral / negative counts and percentages), and a
+      net-promoter-score proxy (% Positive − % Negative). Joins to
+      Salesforce accounts on `customer_id = account_id` in mart models.
+    columns:
+      - name: customer_id
+        description: Primary key — matches `stg_salesforce__accounts.account_id`.
+      - name: total_feedback_count
+        description: Total feedback submissions for this customer.
+      - name: avg_rating
+        description: Mean star rating across all submissions (1–5 scale).
+      - name: positive_feedback_count
+        description: Count of submissions with rating 4 or 5.
+      - name: neutral_feedback_count
+        description: Count of submissions with rating 3.
+      - name: negative_feedback_count
+        description: Count of submissions with rating 1 or 2.
+      - name: positive_feedback_pct
+        description: Percentage of submissions that were positive.
+      - name: commented_feedback_count
+        description: Count of submissions that included a free-text comment.
+      - name: first_feedback_date
+        description: Earliest feedback date for this customer.
+      - name: last_feedback_date
+        description: Most recent feedback date for this customer.
+      - name: distinct_products_rated
+        description: Number of distinct products/features this customer has rated.
+      - name: nps_proxy
+        description: >
+          Net Promoter Score proxy: positive_pct − negative_pct. Ranges
+          from −100 to +100. Higher is better.
+
+  - name: int_jira_issue_summary
+    description: >
+      Ephemeral model. One row per `assignee` with workload and resolution
+      metrics. Used in the engineering health mart to surface per-engineer
+      throughput and backlog depth.
+    columns:
+      - name: assignee
+        description: Primary key — Jira assignee username/email.
+      - name: total_issues
+        description: All issues ever assigned to this person.
+      - name: resolved_issues
+        description: Issues with a non-NULL resolved timestamp.
+      - name: open_issues
+        description: Issues still unresolved.
+      - name: highest_priority_count
+        description: Count of issues with Jira priority 'Highest'.
+      - name: high_priority_count
+        description: Count of issues with Jira priority 'High'.
+      - name: medium_priority_count
+        description: Count of issues with Jira priority 'Medium'.
+      - name: low_priority_count
+        description: Count of issues with Jira priority 'Low' or 'Lowest'.
+      - name: avg_days_to_resolve
+        description: Mean calendar days from created to resolved for closed issues.
+      - name: median_days_to_resolve
+        description: Median calendar days to resolve for closed issues.
+      - name: max_days_to_resolve
+        description: Longest time-to-resolve observed for this assignee.
+      - name: total_time_spent_hours
+        description: Sum of logged work hours across all issues.
+      - name: avg_original_estimate_hours
+        description: Mean original time estimate in hours.
+      - name: first_issue_created_at
+        description: Timestamp of the earliest issue assigned to this person.
+      - name: last_issue_created_at
+        description: Timestamp of the most recent issue assigned to this person.
+      - name: resolution_rate_pct
+        description: Percentage of assigned issues that have been resolved.
+
+  - name: int_user_session_summary
+    description: >
+      Ephemeral model. One row per `user_id` with active session counts.
+      Joins to feedback and account models on `user_id = customer_id`.
+    columns:
+      - name: user_id
+        description: Primary key — matches `stg_google_sheets__user_feedback.customer_id`.
+      - name: active_session_count
+        description: Number of currently active sessions for this user.
+      - name: has_multiple_sessions
+        description: TRUE when the user has more than one concurrent active session.
+      - name: first_seen_at
+        description: Earliest synced_at timestamp across sessions for this user.
+      - name: last_seen_at
+        description: Most recent synced_at timestamp across sessions for this user.

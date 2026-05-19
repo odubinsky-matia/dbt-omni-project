@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: stg_jira__issues
+    description: >
+      Cleaned and renamed Jira issues. Soft-deleted rows are excluded.
+      Derived fields include a human-readable priority label, a boolean
+      `is_resolved` flag, and `days_to_resolve` calculated from created
+      to resolved timestamps. Time-tracking fields are converted from
+      Jira's native seconds to hours.
+    columns:
+      - name: issue_id
+        description: Surrogate-free primary key — Jira's numeric issue ID.
+      - name: issue_key
+        description: Human-readable Jira key (e.g. ENG-42).
+      - name: summary
+        description: One-line title of the issue.
+      - name: status_id
+        description: Numeric Jira status ID.
+      - name: priority_id
+        description: Numeric Jira priority ID.
+      - name: priority_label
+        description: >
+          Derived human-readable priority: Highest / High / Medium / Low /
+          Lowest. Mapped from the numeric priority_id using Jira's default
+          scheme (1=Highest … 5=Lowest).
+      - name: issue_type_id
+        description: Numeric Jira issue type ID.
+      - name: project_id
+        description: Numeric Jira project ID.
+      - name: assignee
+        description: Assignee username/email, NULLed-out for deleted rows.
+      - name: reporter
+        description: Reporter username/email.
+      - name: parent_issue_id
+        description: Parent issue ID for sub-tasks; NULL for top-level issues.
+      - name: is_resolved
+        description: TRUE when the `resolved` timestamp is not NULL.
+      - name: created_at
+        description: Issue creation timestamp (UTC).
+      - name: updated_at
+        description: Most recent update timestamp (UTC).
+      - name: resolved_at
+        description: Resolution timestamp; NULL if the issue is still open.
+      - name: due_date
+        description: Target completion date.
+      - name: days_to_resolve
+        description: >
+          Calendar days between `created_at` and `resolved_at`. NULL for
+          open issues.
+      - name: time_spent_hours
+        description: Logged work time converted from seconds to hours.
+      - name: original_estimate_hours
+        description: Original estimate converted from seconds to hours.
+      - name: remaining_estimate_hours
+        description: Remaining estimate converted from seconds to hours.
+      - name: synced_at
+        description: Timestamp when Matia last synced this row.

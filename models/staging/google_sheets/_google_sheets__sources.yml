@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: google_sheets
+    description: >
+      Raw data synced from Google Sheets by Matia. Contains manually-maintained
+      reports used by the Customer Success and Product teams.
+    database: MATIA_DATABASE
+    schema: GOOGLE_SHEETS_MCP_DEMO
+    loader: matia
+    loaded_at_field: _matia_synced
+    tables:
+      - name: user_feedback_report
+        description: >
+          One row per customer feedback submission. Collected via the product's
+          feedback widget and maintained in a Google Sheet. Each row captures a
+          star rating (1–5), an optional free-text comment, and references to
+          the customer and product being rated.
+        columns:
+          - name: _row
+            description: Synthetic primary key — sequential row number assigned by Matia.
+          - name: feedback_id
+            description: Application-level UUID identifying the feedback record.
+          - name: customer_id
+            description: >
+              Foreign key to the Salesforce Account. Matches
+              `SALESFORCE.ACCOUNT.ID`.
+          - name: product_id
+            description: >
+              Identifier of the product or feature being rated. Matches
+              product catalogue identifiers used across the business.
+          - name: rating
+            description: Integer star rating on a 1 (worst) to 5 (best) scale.
+          - name: comment
+            description: Free-text comment left by the customer. May be NULL.
+          - name: feedback_date
+            description: Calendar date the feedback was submitted.
+          - name: _matia_synced
+            description: Timestamp when Matia last synced this row.
+          - name: _matia_deleted
+            description: TRUE if the record has been soft-deleted in the source.

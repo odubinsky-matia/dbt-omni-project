@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: mart_engineering_health
+    description: >
+      One row per Jira assignee. Aggregates issue workload, priority mix,
+      and resolution speed, then benchmarks each assignee against the
+      team average to surface relative performance. The `performance_tier`
+      label (High Performer / On Track / Needs Attention) is designed for
+      engineering manager dashboards and sprint retrospectives.
+
+      Intended audience: Engineering Management, Delivery leads.
+    columns:
+      - name: assignee
+        description: Primary key — Jira assignee username or email.
+      - name: total_issues
+        description: Total issues ever assigned to this person.
+      - name: open_issues
+        description: Issues currently unresolved.
+      - name: resolved_issues
+        description: Issues with a non-NULL resolved timestamp.
+      - name: resolution_rate_pct
+        description: >
+          Percentage of assigned issues that have been resolved.
+          Higher is better.
+      - name: highest_priority_count
+        description: Count of Highest priority issues assigned.
+      - name: high_priority_count
+        description: Count of High priority issues assigned.
+      - name: medium_priority_count
+        description: Count of Medium priority issues assigned.
+      - name: low_priority_count
+        description: Count of Low or Lowest priority issues assigned.
+      - name: high_priority_pct
+        description: Percentage of assigned issues that are High or Highest priority.
+      - name: avg_days_to_resolve
+        description: Mean calendar days from created to resolved for closed issues.
+      - name: median_days_to_resolve
+        description: Median calendar days to resolve.
+      - name: max_days_to_resolve
+        description: Longest single issue resolution time for this assignee.
+      - name: team_avg_days_to_resolve
+        description: Team-wide average days to resolve (cross-join constant).
+      - name: days_vs_team_avg
+        description: >
+          Difference between this assignee's avg and the team average.
+          Negative = faster than average.
+      - name: speed_vs_team
+        description: >
+          Label: Faster than average / Slower than average / On par.
+      - name: total_time_spent_hours
+        description: Total hours of logged work across all issues.
+      - name: avg_original_estimate_hours
+        description: Mean original time estimate in hours.
+      - name: first_issue_created_at
+        description: Timestamp of the earliest issue assigned to this person.
+      - name: last_issue_created_at
+        description: Timestamp of the most recent issue assigned to this person.
+      - name: performance_tier
+        description: >
+          Composite tier: High Performer (resolution ≥ 80% and faster than
+          average), On Track (resolution ≥ 60%), Needs Attention (below 60%).

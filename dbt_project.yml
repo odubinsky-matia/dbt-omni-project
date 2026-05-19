@@ -1,0 +1,47 @@
+name: 'dbt_omni'
+version: '1.0.0'
+config-version: 2
+
+profile: 'dbt_omni'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  dbt_omni:
+    staging:
+      +materialized: view
+      +schema: staging
+      jira:
+        +tags: ["jira", "staging"]
+      google_sheets:
+        +tags: ["google_sheets", "staging"]
+      mongodb:
+        +tags: ["mongodb", "staging"]
+      salesforce:
+        +tags: ["salesforce", "staging"]
+      google_drive:
+        +tags: ["google_drive", "staging"]
+    intermediate:
+      +materialized: ephemeral
+      +tags: ["intermediate"]
+    marts:
+      +materialized: table
+      +schema: marts
+      customer_360:
+        +tags: ["customer", "marts"]
+      product:
+        +tags: ["product", "marts"]
+      finance:
+        +tags: ["finance", "marts"]
+      engineering:
+        +tags: ["engineering", "marts"]

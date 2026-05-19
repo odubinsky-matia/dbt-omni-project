@@ -1,0 +1,39 @@
+version: 2
+
+sources:
+  - name: google_drive
+    description: >
+      Raw files synced from Google Drive by Matia. Each row corresponds to
+      one line in a spreadsheet file. The `_file` column identifies the
+      source file, and `_line` is the row number within that file.
+    database: MATIA_DATABASE
+    schema: GOOGLE_DRIVE
+    loader: matia
+    loaded_at_field: _matia_synced
+    tables:
+      - name: financials_jan24
+        description: >
+          Monthly financial report for January 2024, sourced from a Google
+          Drive spreadsheet. Each row represents one reporting period entry
+          with top-line revenue and expense figures. Multiple files may be
+          represented if the sheet spans tabs or was re-uploaded; `_file`
+          disambiguates them.
+        columns:
+          - name: _line
+            description: Row number within the source file. Part of composite PK.
+          - name: _file
+            description: Source file name or path in Google Drive. Part of composite PK.
+          - name: _modified
+            description: Last-modified timestamp string of the source file.
+          - name: id
+            description: Application-assigned report line ID (may be NULL for header rows).
+          - name: report_date
+            description: Reporting period date stored as a string; cast to DATE in staging.
+          - name: revenue
+            description: Total revenue for the period (currency in source not specified).
+          - name: expenses
+            description: Total expenses for the period.
+          - name: _matia_synced
+            description: Timestamp when Matia last synced this row.
+          - name: _matia_deleted
+            description: TRUE if the record has been soft-deleted.

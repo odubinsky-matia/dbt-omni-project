@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: stg_salesforce__accounts
+    description: >
+      Cleaned and standardised Salesforce Account records. Both hard-deleted
+      (`is_deleted = true`) and Matia soft-deleted rows are excluded.
+      Custom fields are renamed to remove the Salesforce `_c` suffix.
+      `account_age_days` measures how long the account has existed in CRM.
+    columns:
+      - name: account_id
+        description: Salesforce 18-character Account ID — primary key.
+      - name: account_name
+        description: Legal or trading name of the account.
+      - name: account_type
+        description: Salesforce Account Type (Customer, Prospect, Partner, etc.).
+      - name: industry
+        description: Industry vertical.
+      - name: annual_revenue
+        description: Self-reported annual revenue in account currency.
+      - name: number_of_employees
+        description: Headcount figure from Salesforce.
+      - name: billing_city
+        description: City of the billing address.
+      - name: billing_state
+        description: State/region of the billing address.
+      - name: billing_country
+        description: Country of the billing address.
+      - name: owner_id
+        description: Salesforce User ID of the Account Owner.
+      - name: account_source
+        description: Lead source that generated the account.
+      - name: rating
+        description: Salesforce rating (Hot / Warm / Cold).
+      - name: sla_tier
+        description: SLA tier (from custom field `sla_c`).
+      - name: customer_priority
+        description: Internal priority tier (from custom field `customer_priority_c`).
+      - name: is_active
+        description: >
+          TRUE when the `active_c` custom field indicates an active account.
+      - name: account_age_days
+        description: Days elapsed since `created_date` as of the run date.
+      - name: created_at
+        description: Timestamp when the Salesforce record was created.
+      - name: last_modified_at
+        description: Timestamp of the most recent change in Salesforce.
+      - name: synced_at
+        description: Timestamp when Matia last synced this row.

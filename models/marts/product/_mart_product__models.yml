@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: mart_product_feedback
+    description: >
+      One row per `product_id`. Aggregates all user feedback submissions
+      to surface per-product quality signals: star-rating distribution,
+      sentiment breakdown (Positive / Neutral / Negative), comment
+      engagement rate, and an overall `product_sentiment` label
+      (Loved / Mixed / Struggling based on average rating thresholds).
+
+      Intended audience: Product Management, Product Analytics.
+    columns:
+      - name: product_id
+        description: Primary key — product or feature identifier.
+      - name: total_reviews
+        description: Total feedback submissions for this product.
+      - name: unique_reviewers
+        description: Count of distinct customers who submitted feedback.
+      - name: avg_rating
+        description: Mean star rating (1–5) across all reviews.
+      - name: five_star_count
+        description: Count of 5-star reviews.
+      - name: four_star_count
+        description: Count of 4-star reviews.
+      - name: three_star_count
+        description: Count of 3-star reviews.
+      - name: two_star_count
+        description: Count of 2-star reviews.
+      - name: one_star_count
+        description: Count of 1-star reviews.
+      - name: positive_count
+        description: Reviews rated 4 or 5.
+      - name: neutral_count
+        description: Reviews rated 3.
+      - name: negative_count
+        description: Reviews rated 1 or 2.
+      - name: positive_pct
+        description: Percentage of reviews that were positive.
+      - name: negative_pct
+        description: Percentage of reviews that were negative.
+      - name: commented_count
+        description: Reviews that included a free-text comment.
+      - name: comment_rate_pct
+        description: Percentage of reviews that included a comment.
+      - name: first_review_date
+        description: Earliest feedback date for this product.
+      - name: last_review_date
+        description: Most recent feedback date for this product.
+      - name: product_sentiment
+        description: >
+          Overall label: Loved (avg ≥ 4.0), Mixed (avg 3.0–3.9),
+          Struggling (avg < 3.0).

@@ -1,0 +1,62 @@
+version: 2
+
+sources:
+  - name: salesforce
+    description: >
+      Raw Salesforce CRM data synced by Matia. The primary source of
+      customer account and relationship data across the business.
+    database: MATIA_DATABASE
+    schema: SALESFORCE
+    loader: matia
+    loaded_at_field: _matia_synced
+    tables:
+      - name: account
+        description: >
+          One row per Salesforce Account record. Accounts represent companies
+          (B2B customers, prospects, or partners). Custom fields use the `_c`
+          suffix convention. Hard-deleted records are flagged via `is_deleted`;
+          soft-deleted via `_matia_deleted`.
+        columns:
+          - name: id
+            description: Salesforce 18-character Account ID — primary key.
+          - name: name
+            description: Legal or trading name of the account.
+          - name: type
+            description: >
+              Account classification (e.g. Customer, Prospect, Partner,
+              Competitor).
+          - name: industry
+            description: Industry vertical as set in Salesforce.
+          - name: annual_revenue
+            description: Self-reported annual revenue in account currency.
+          - name: number_of_employees
+            description: Headcount as reported or enriched in Salesforce.
+          - name: billing_city
+            description: City component of the billing address.
+          - name: billing_state
+            description: State/region component of the billing address.
+          - name: billing_country
+            description: Country component of the billing address.
+          - name: owner_id
+            description: Salesforce User ID of the Account Owner (AE/CSM).
+          - name: account_source
+            description: How the account was originally acquired (e.g. Web, Referral).
+          - name: rating
+            description: >
+              Salesforce rating field — typically Hot / Warm / Cold.
+          - name: sla_c
+            description: SLA tier assigned to this account (custom field).
+          - name: customer_priority_c
+            description: Internal customer priority tier (custom field).
+          - name: active_c
+            description: Whether the account is considered active (custom field).
+          - name: created_date
+            description: Timestamp when the Salesforce record was created.
+          - name: last_modified_date
+            description: Timestamp of the most recent change to the record.
+          - name: is_deleted
+            description: TRUE if the record has been hard-deleted in Salesforce.
+          - name: _matia_synced
+            description: Timestamp when Matia last synced this row.
+          - name: _matia_deleted
+            description: TRUE if the record has been soft-deleted by Matia.

@@ -1,0 +1,35 @@
+version: 2
+
+sources:
+  - name: mongodb
+    description: >
+      Raw data synced from the application's MongoDB cluster by Matia.
+      Contains operational collections such as user sessions.
+    database: MATIA_DATABASE
+    schema: MONGODB_V2
+    loader: matia
+    loaded_at_field: _matia_synced
+    tables:
+      - name: sessions
+        description: >
+          One document per authenticated user session. Created when a user
+          signs in and removed (soft-deleted) when the session expires or
+          the user signs out. The JWT column is the raw signed token; it is
+          masked in the staging layer and should never be used for
+          authentication in analytics queries.
+        columns:
+          - name: _id
+            description: MongoDB ObjectId — primary key for the sessions collection.
+          - name: user_id
+            description: >
+              The authenticated user's identifier. Maps to the
+              `customer_id` field in user feedback and to Salesforce
+              Account IDs where applicable.
+          - name: jwt
+            description: >
+              Raw JWT bearer token. Sensitive — masked to a constant in
+              the staging layer.
+          - name: _matia_synced
+            description: Timestamp when Matia last synced this document.
+          - name: _matia_deleted
+            description: TRUE if the session has been soft-deleted (expired/logged out).

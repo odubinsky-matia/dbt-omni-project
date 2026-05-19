@@ -1,0 +1,88 @@
+version: 2
+
+models:
+  - name: mart_financial_overview
+    description: >
+      One row per reporting period (`report_date`). Aggregates revenue,
+      expenses, and profit from the Google Drive financials spreadsheet
+      and enriches each period with period-over-period delta and growth
+      rate using Snowflake window functions. Includes running cumulative
+      totals for YTD-style reporting.
+
+      Intended audience: Finance, Executive dashboards.
+    columns:
+      - name: report_date
+        description: Primary key — reporting period date.
+      - name: fiscal_month
+        description: YYYY-MM string derived from `report_date`.
+      - name: source_file
+        description: Name of the originating Google Drive spreadsheet file.
+      - name: total_revenue
+        description: Sum of revenue across all lines for this period.
+      - name: total_expenses
+        description: Sum of expenses across all lines for this period.
+      - name: total_profit
+        description: Sum of profit (revenue − expenses) for this period.
+      - name: profit_margin_pct
+        description: >
+          Profit as a percentage of revenue for this period. NULL when
+          revenue is zero.
+      - name: line_count
+        description: Number of source file lines rolled up into this period row.
+      - name: any_profitable_lines
+        description: TRUE if at least one source line was profitable.
+      - name: prev_period_revenue
+        description: Revenue from the immediately preceding reporting period.
+      - name: prev_period_profit
+        description: Profit from the immediately preceding reporting period.
+      - name: revenue_delta
+        description: Absolute revenue change versus the previous period.
+      - name: revenue_growth_pct
+        description: Percentage revenue change versus the previous period.
+      - name: profit_delta
+        description: Absolute profit change versus the previous period.
+      - name: cumulative_revenue
+        description: Running total of revenue from the earliest period to this one.
+      - name: cumulative_profit
+        description: Running total of profit from the earliest period to this one.
+
+  - name: mart_revenue_vs_customer_sentiment
+    description: >
+      One row per fiscal month. Combines monthly financial performance
+      (revenue, expenses, profit, margin) from Google Drive with
+      aggregated customer feedback sentiment (avg rating, positive %)
+      for the same month. Enables correlation analysis between product
+      satisfaction and revenue outcomes.
+
+      The `month_signal` label summarises the combined state:
+      - Growing & Loved: profitable + avg rating ≥ 4
+      - Growing but Struggling: profitable + avg rating < 3
+      - Loved but Unprofitable: avg rating ≥ 4 but unprofitable
+      - Needs Focus: everything else
+
+      Intended audience: Executive dashboards, Finance, Product Strategy.
+    columns:
+      - name: fiscal_month
+        description: Primary key — YYYY-MM reporting period.
+      - name: monthly_revenue
+        description: Total revenue for the month.
+      - name: monthly_expenses
+        description: Total expenses for the month.
+      - name: monthly_profit
+        description: Total profit for the month (revenue − expenses).
+      - name: avg_profit_margin_pct
+        description: Average profit margin percentage across reporting lines.
+      - name: monthly_feedback_count
+        description: Total feedback submissions received in this month.
+      - name: monthly_avg_rating
+        description: Mean product rating for the month (1–5).
+      - name: monthly_positive_count
+        description: Count of positive feedback submissions in the month.
+      - name: monthly_negative_count
+        description: Count of negative feedback submissions in the month.
+      - name: monthly_positive_pct
+        description: Percentage of monthly feedback that was positive.
+      - name: month_signal
+        description: >
+          Combined business signal label: Growing & Loved /
+          Growing but Struggling / Loved but Unprofitable / Needs Focus.

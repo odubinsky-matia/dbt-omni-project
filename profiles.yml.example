@@ -1,0 +1,25 @@
+dbt_omni:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "<your_snowflake_account>"       # e.g. abc123.us-east-1
+      user: "<your_snowflake_user>"
+      password: "<your_snowflake_password>"      # or use authenticator: externalbrowser
+      role: "<your_snowflake_role>"              # e.g. TRANSFORMER
+      database: MATIA_DATABASE
+      warehouse: "<your_snowflake_warehouse>"    # e.g. COMPUTE_WH
+      schema: DBT_DEV                            # personal dev schema
+      threads: 4
+      client_session_keep_alive: false
+    prod:
+      type: snowflake
+      account: "<your_snowflake_account>"
+      user: "<your_snowflake_user>"
+      password: "<your_snowflake_password>"
+      role: "<your_snowflake_role>"
+      database: MATIA_DATABASE
+      warehouse: "<your_snowflake_warehouse>"
+      schema: DBT_PROD
+      threads: 8
+      client_session_keep_alive: false

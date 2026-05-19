@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_google_drive__financials
+    description: >
+      Cleaned financial data from the January 2024 Google Drive spreadsheet.
+      Soft-deleted and NULL-revenue rows are excluded. `report_date` is cast
+      to a proper DATE. Derived fields: `profit`, `profit_margin_pct`, and
+      a `fiscal_month` label for grouping.
+    columns:
+      - name: report_line_id
+        description: Surrogate row identifier combining file name and line number.
+      - name: source_file
+        description: Name of the originating Google Drive file.
+      - name: report_date
+        description: Reporting period date (DATE type).
+      - name: fiscal_month
+        description: >
+          Year-month string (YYYY-MM) derived from `report_date` for easy
+          time-series grouping.
+      - name: revenue
+        description: Total revenue for the period.
+      - name: expenses
+        description: Total expenses for the period.
+      - name: profit
+        description: Derived as `revenue - expenses`.
+      - name: profit_margin_pct
+        description: >
+          Derived as `profit / revenue * 100`. NULL when revenue is zero
+          to avoid division-by-zero.
+      - name: is_profitable
+        description: TRUE when `profit` > 0.
+      - name: synced_at
+        description: Timestamp when Matia last synced this row.

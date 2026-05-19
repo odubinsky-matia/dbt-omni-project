@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: mart_customer_360
+    description: >
+      Wide customer table — one row per Salesforce Account. Combines CRM
+      firmographics with aggregated product feedback (avg rating, sentiment
+      breakdown, NPS proxy) and active MongoDB session counts to produce a
+      composite `customer_health_score` (0–100) and a bucketed `health_tier`
+      (Healthy / At Risk / Critical).
+
+      **Score formula (0–100):**
+      - 50 pts: normalised average product rating (0–5 → 0–50)
+      - 30 pts: positive feedback percentage (0–100 → 0–30)
+      - 20 pts: active session count × 2, capped at 20
+
+      Intended audience: Customer Success, Revenue Operations, Executive dashboards.
+    columns:
+      - name: account_id
+        description: Salesforce 18-character Account ID — primary key.
+      - name: account_name
+        description: Legal or trading name of the account.
+      - name: account_type
+        description: Salesforce Account Type (Customer, Prospect, Partner, etc.).
+      - name: industry
+        description: Industry vertical from Salesforce.
+      - name: billing_country
+        description: Country of the billing address.
+      - name: billing_city
+        description: City of the billing address.
+      - name: billing_state
+        description: State/region of the billing address.
+      - name: annual_revenue
+        description: Self-reported annual revenue.
+      - name: number_of_employees
+        description: Headcount figure from Salesforce.
+      - name: customer_priority
+        description: Internal priority tier from Salesforce custom field.
+      - name: sla_tier
+        description: SLA tier assigned in Salesforce.
+      - name: crm_rating
+        description: Salesforce native rating (Hot / Warm / Cold).
+      - name: account_source
+        description: Lead source that generated the account.
+      - name: is_active
+        description: TRUE for accounts flagged active in Salesforce.
+      - name: account_age_days
+        description: Days since the Salesforce record was created.
+      - name: account_created_at
+        description: Timestamp when the Salesforce record was created.
+      - name: last_activity_date
+        description: Date of the last recorded activity in Salesforce.
+      - name: total_feedback_count
+        description: Total product feedback submissions from this customer.
+      - name: avg_rating
+        description: Mean star rating (1–5) across all feedback submissions.
+      - name: positive_feedback_count
+        description: Count of feedback submissions rated 4 or 5.
+      - name: negative_feedback_count
+        description: Count of feedback submissions rated 1 or 2.
+      - name: positive_feedback_pct
+        description: Percentage of feedback submissions that were positive.
+      - name: nps_proxy
+        description: Net Promoter Score proxy (positive_pct − negative_pct).
+      - name: distinct_products_rated
+        description: Number of distinct products this customer has provided feedback for.
+      - name: first_feedback_date
+        description: Date of the customer's earliest feedback submission.
+      - name: last_feedback_date
+        description: Date of the customer's most recent feedback submission.
+      - name: active_session_count
+        description: Number of active MongoDB sessions attributed to this customer.
+      - name: has_multiple_sessions
+        description: TRUE when more than one active session exists for this customer.
+      - name: customer_health_score
+        description: Composite health score from 0 (worst) to 100 (best).
+      - name: health_tier
+        description: >
+          Bucketed health status: Healthy (≥75), At Risk (50–74),
+          Critical (<50).

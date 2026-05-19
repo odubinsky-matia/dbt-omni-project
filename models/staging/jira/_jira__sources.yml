@@ -1,0 +1,63 @@
+version: 2
+
+sources:
+  - name: jira
+    description: >
+      Raw Jira data synced by Matia into Snowflake. Contains project management
+      data including issues, priorities, statuses, and assignees. Rows are
+      soft-deleted via `_matia_deleted`.
+    database: MATIA_DATABASE
+    schema: JIRA_V2_MCP_DEMO
+    loader: matia
+    loaded_at_field: _matia_synced
+    tables:
+      - name: issue
+        description: >
+          One row per Jira issue. Captures lifecycle fields such as created,
+          updated, resolved timestamps, time-tracking estimates, and foreign
+          keys to priority, status, issue type, and project lookup tables.
+        columns:
+          - name: id
+            description: Primary key — Jira's internal numeric issue ID.
+          - name: key
+            description: Human-readable Jira issue key (e.g. ENG-1234).
+          - name: summary
+            description: One-line title of the issue.
+          - name: description
+            description: Full markdown description body of the issue.
+          - name: status
+            description: Foreign key to Jira status lookup (numeric ID).
+          - name: status_category
+            description: Foreign key to Jira status category lookup.
+          - name: priority
+            description: Foreign key to Jira priority lookup (numeric ID).
+          - name: issue_type
+            description: Foreign key to Jira issue type lookup.
+          - name: project
+            description: Foreign key to Jira project lookup.
+          - name: assignee
+            description: Username or email of the user the issue is assigned to.
+          - name: reporter
+            description: Username or email of the user who filed the issue.
+          - name: creator
+            description: Username or email of the user who created the issue.
+          - name: created
+            description: Timestamp when the issue was first created.
+          - name: updated
+            description: Timestamp of the most recent update to the issue.
+          - name: resolved
+            description: Timestamp when the issue was resolved. NULL if open.
+          - name: due_date
+            description: Target completion date set on the issue.
+          - name: time_spent
+            description: Seconds of logged work time (Jira native unit).
+          - name: original_estimate
+            description: Original time estimate in seconds.
+          - name: remaining_estimate
+            description: Remaining time estimate in seconds.
+          - name: parent_id
+            description: ID of the parent issue (populated for sub-tasks).
+          - name: _matia_synced
+            description: Timestamp when Matia last synced this row.
+          - name: _matia_deleted
+            description: TRUE if the record has been soft-deleted in the source.

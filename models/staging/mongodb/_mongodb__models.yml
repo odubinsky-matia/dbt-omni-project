@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_mongodb__sessions
+    description: >
+      Active (non-deleted) user sessions sourced from MongoDB. The raw
+      JWT is masked for privacy — the staging model stores only a redacted
+      placeholder. `session_created_at` is inferred from the MongoDB
+      ObjectId's embedded timestamp.
+    columns:
+      - name: session_id
+        description: MongoDB ObjectId — primary key.
+      - name: user_id
+        description: >
+          Authenticated user identifier. Can be joined to
+          `stg_google_sheets__user_feedback.customer_id` to link sessions
+          to product feedback.
+      - name: jwt_masked
+        description: >
+          Always '[REDACTED]'. The raw JWT is never surfaced in analytics
+          models.
+      - name: is_active
+        description: >
+          TRUE for all rows in this model (soft-deleted sessions are
+          excluded at the source filter step).
+      - name: synced_at
+        description: Timestamp when Matia last synced this document.

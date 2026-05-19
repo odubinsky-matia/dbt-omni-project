@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_google_sheets__user_feedback
+    description: >
+      Cleaned user feedback submissions. Soft-deleted rows are excluded.
+      A sentiment bucket (`rating_category`) is derived from the numeric
+      rating to support aggregation without repeated CASE logic downstream.
+      The `has_comment` flag makes it easy to filter commented vs.
+      uncommented feedback.
+    columns:
+      - name: feedback_row_id
+        description: Synthetic row-level primary key assigned by Matia.
+      - name: feedback_id
+        description: Application-level UUID for the feedback record.
+      - name: customer_id
+        description: >
+          Foreign key to Salesforce Account — joins to
+          `stg_salesforce__accounts.account_id`.
+      - name: product_id
+        description: Product or feature identifier being rated.
+      - name: rating
+        description: Star rating integer (1–5).
+      - name: rating_category
+        description: >
+          Bucketed sentiment: Positive (4–5), Neutral (3), Negative (1–2).
+      - name: comment
+        description: Free-text comment; NULL when none was provided.
+      - name: has_comment
+        description: TRUE when a non-empty comment was submitted.
+      - name: feedback_date
+        description: Calendar date the feedback was submitted.
+      - name: synced_at
+        description: Timestamp when Matia last synced this row.
