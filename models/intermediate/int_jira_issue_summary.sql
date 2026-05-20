@@ -32,7 +32,7 @@ aggregated as (
         round(avg(case when is_resolved then days_to_resolve end), 1)
                                                             as avg_days_to_resolve,
         round(
-            median(case when is_resolved then days_to_resolve end)
+            {{ median_agg('case when is_resolved then days_to_resolve end') }}
         , 1)                                                as median_days_to_resolve,
         max(case when is_resolved then days_to_resolve end)
                                                             as max_days_to_resolve,
@@ -48,7 +48,7 @@ aggregated as (
         -- resolution rate
         round(
             count(case when is_resolved then 1 end)
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                                   as resolution_rate_pct
 
     from issues

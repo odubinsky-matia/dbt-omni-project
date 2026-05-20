@@ -23,3 +23,21 @@ dbt_omni:
       schema: DBT_PROD
       threads: 8
       client_session_keep_alive: false
+    bq_dev:
+      type: bigquery
+      method: oauth                             # run: gcloud auth application-default login
+      project: "<your_gcp_project_id>"         # e.g. bq-dbt-lineage-demo
+      dataset: DBT_DEV
+      threads: 4
+      location: US
+      timeout_seconds: 300
+      priority: interactive
+    bq_prod:
+      type: bigquery
+      method: oauth
+      project: "<your_gcp_project_id>"
+      dataset: DBT_PROD
+      threads: 8
+      location: US
+      timeout_seconds: 300
+      priority: interactive

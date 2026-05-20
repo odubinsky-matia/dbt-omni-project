@@ -6,8 +6,11 @@ sources:
       Raw files synced from Google Drive by Matia. Each row corresponds to
       one line in a spreadsheet file. The `_file` column identifies the
       source file, and `_line` is the row number within that file.
-    database: MATIA_DATABASE
+    database: "{{ 'bq-dbt-lineage-demo' if target.type == 'bigquery' else 'MATIA_DATABASE' }}"
     schema: GOOGLE_DRIVE
+    loader: matia
+    config:
+      loaded_at_field: _matia_synced
     tables:
       - name: financials_jan24
         description: >

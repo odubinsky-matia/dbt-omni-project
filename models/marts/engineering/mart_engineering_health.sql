@@ -40,7 +40,7 @@ enriched as (
 
         round(
             (s.highest_priority_count + s.high_priority_count)
-            / nullif(s.total_issues, 0)::float * 100, 1
+            / {{ cast_float('nullif(s.total_issues, 0)') }} * 100, 1
         )                                               as high_priority_pct,
 
         -- speed
