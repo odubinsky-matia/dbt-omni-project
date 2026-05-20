@@ -26,7 +26,7 @@ aggregated as (
 
         round(
             count(case when rating_category = 'Positive' then 1 end)
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                                   as positive_feedback_pct,
 
         count(case when has_comment = true then 1 end)      as commented_feedback_count,
@@ -40,7 +40,7 @@ aggregated as (
         round(
             (count(case when rating_category = 'Positive' then 1 end)
              - count(case when rating_category = 'Negative' then 1 end))
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                                   as nps_proxy
 
     from feedback

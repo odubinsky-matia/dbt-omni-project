@@ -47,7 +47,8 @@ cleaned as (
         (upper(coalesce(active_c, 'No')) = 'YES')       as is_active,
 
         -- account age
-        datediff('day', created_date, current_date())   as account_age_days,
+        {{ datediff_days('created_date', 'current_date()') }}
+                                                        as account_age_days,
 
         -- timestamps
         created_date                                    as created_at,

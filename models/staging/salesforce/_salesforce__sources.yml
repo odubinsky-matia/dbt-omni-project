@@ -5,8 +5,11 @@ sources:
     description: >
       Raw Salesforce CRM data synced by Matia. The primary source of
       customer account and relationship data across the business.
-    database: MATIA_DATABASE
+    database: "{{ 'bq-dbt-lineage-demo' if target.type == 'bigquery' else 'MATIA_DATABASE' }}"
     schema: SALESFORCE
+    loader: matia
+    config:
+      loaded_at_field: _matia_synced
     tables:
       - name: account
         description: >
