@@ -8,17 +8,17 @@ cleaned as (
 
     select
         -- identifiers
-        id                                              as account_id,
-        name                                            as account_name,
-        type                                            as account_type,
+        id                                                  as account_id,
+        name                                                as account_name,
+        type                                                as account_type,
         owner_id,
-        parent_id                                       as parent_account_id,
+        parent_id                                           as parent_account_id,
 
         -- firmographics
         industry,
         annual_revenue,
         number_of_employees,
-        year_started,
+        null::int                                           as year_started,           -- not synced
 
         -- location
         billing_city,
@@ -32,31 +32,31 @@ cleaned as (
 
         -- crm metadata
         account_source,
-        rating,
-        currency_iso_code,
+        null::varchar                                       as rating,                 -- not synced
+        null::varchar                                       as currency_iso_code,      -- not synced
 
         -- custom fields (drop _c suffix)
-        customer_priority_c                             as customer_priority,
-        sla_c                                           as sla_tier,
-        slaserial_number_c                              as sla_serial_number,
-        slaexpiration_date_c                            as sla_expiration_date,
-        upsell_opportunity_c                            as upsell_opportunity,
-        numberof_locations_c                            as number_of_locations,
+        null::varchar                                       as customer_priority,      -- not synced
+        null::varchar                                       as sla_tier,               -- not synced
+        null::varchar                                       as sla_serial_number,      -- not synced
+        null::date                                          as sla_expiration_date,    -- not synced
+        null::boolean                                       as upsell_opportunity,     -- not synced
+        null::int                                           as number_of_locations,    -- not synced
 
         -- derived active flag
-        (upper(coalesce(active_c, 'No')) = 'YES')       as is_active,
+        false                                               as is_active,              -- not synced (active_c unavailable)
 
         -- account age
-        datediff('day', created_date, current_date())   as account_age_days,
+        datediff('day', created_date, current_date())       as account_age_days,
 
         -- timestamps
-        created_date                                    as created_at,
-        last_modified_date                              as last_modified_at,
-        last_activity_date,
+        created_date                                        as created_at,
+        last_modified_date                                  as last_modified_at,
+        to_timestamp_tz(last_activity_date::varchar)        as last_activity_date,     -- cast DATE → TIMESTAMP_TZ for consistency
         last_viewed_date,
 
         -- meta
-        _matia_synced                                   as synced_at
+        _matia_synced                                       as synced_at
 
     from source
     where coalesce(is_deleted, false) = false
