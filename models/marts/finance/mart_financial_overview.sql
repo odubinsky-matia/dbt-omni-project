@@ -26,7 +26,7 @@ by_period as (
         )                                                   as profit_margin_pct,
 
         count(*)                                            as line_count,
-        {{ logical_or('is_profitable') }}                  as any_profitable_lines
+        boolor_agg(is_profitable)                           as any_profitable_lines
 
     from financials
     group by 1, 2, 3
