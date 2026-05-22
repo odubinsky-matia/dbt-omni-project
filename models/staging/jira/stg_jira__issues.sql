@@ -48,9 +48,8 @@ cleaned as (
         -- derived
         resolved is not null                            as is_resolved,
 
-        datediff(
-            'day', created, coalesce(resolved, current_timestamp())
-        )                                               as days_to_resolve,
+        {{ datediff_days('created', 'coalesce(resolved, current_timestamp())') }}
+                                                        as days_to_resolve,
 
         -- time tracking (seconds → hours)
         round(coalesce(time_spent, 0) / 3600.0, 2)     as time_spent_hours,

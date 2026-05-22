@@ -35,19 +35,19 @@ by_product as (
 
         round(
             count(case when rating_category = 'Positive' then 1 end)
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                                   as positive_pct,
 
         round(
             count(case when rating_category = 'Negative' then 1 end)
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                                   as negative_pct,
 
         -- engagement
         count(case when has_comment then 1 end)             as commented_count,
         round(
             count(case when has_comment then 1 end)
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                                   as comment_rate_pct,
 
         -- time

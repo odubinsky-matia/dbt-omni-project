@@ -22,7 +22,7 @@ with financials as (
 feedback_by_month as (
 
     select
-        to_varchar(feedback_date, 'YYYY-MM')    as fiscal_month,
+        {{ format_date_yyyymm('feedback_date') }}       as fiscal_month,
         count(*)                                as monthly_feedback_count,
         round(avg(rating), 2)                   as monthly_avg_rating,
         count(case when rating_category = 'Positive' then 1 end)
@@ -31,7 +31,7 @@ feedback_by_month as (
                                                 as monthly_negative_count,
         round(
             count(case when rating_category = 'Positive' then 1 end)
-            / nullif(count(*), 0)::float * 100, 1
+            / {{ cast_float('nullif(count(*), 0)') }} * 100, 1
         )                                       as monthly_positive_pct
 
     from {{ ref('stg_google_sheets__user_feedback') }}

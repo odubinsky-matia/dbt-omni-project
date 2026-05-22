@@ -6,8 +6,11 @@ sources:
       Raw Jira data synced by Matia into Snowflake. Contains project management
       data including issues, priorities, statuses, and assignees. Rows are
       soft-deleted via `_matia_deleted`.
-    database: MATIA_DATABASE
+    database: "{{ 'bq-dbt-lineage-demo' if target.type == 'bigquery' else 'MATIA_DATABASE' }}"
     schema: JIRA_V2_MCP_DEMO
+    loader: matia
+    config:
+      loaded_at_field: _matia_synced
     tables:
       - name: issue
         description: >

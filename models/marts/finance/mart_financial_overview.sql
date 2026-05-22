@@ -26,7 +26,7 @@ by_period as (
         )                                                   as profit_margin_pct,
 
         count(*)                                            as line_count,
-        max(is_profitable::int) = 1                         as any_profitable_lines
+        {{ logical_or('is_profitable') }}                  as any_profitable_lines
 
     from financials
     group by 1, 2, 3

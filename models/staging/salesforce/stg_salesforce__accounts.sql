@@ -47,7 +47,12 @@ cleaned as (
         false                                               as is_active,              -- not synced (active_c unavailable)
 
         -- account age
+<<<<<<< HEAD
         datediff('day', created_date, current_date())       as account_age_days,
+=======
+        {{ datediff_days('created_date', 'current_date()') }}
+                                                        as account_age_days,
+>>>>>>> ec782436465e54ade1a7bc56dd0c986e429ed3f6
 
         -- timestamps
         created_date                                        as created_at,
