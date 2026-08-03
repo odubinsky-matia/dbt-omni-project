@@ -13,6 +13,9 @@ models:
     columns:
       - name: product_id
         description: Primary key — product or feature identifier.
+        data_tests:
+          - unique
+          - not_null
       - name: total_reviews
         description: Total feedback submissions for this product.
       - name: unique_reviewers
