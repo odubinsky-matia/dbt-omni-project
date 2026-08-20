@@ -20,7 +20,7 @@ cleaned as (
             when rating >= 4 then 'Positive'
             when rating = 3  then 'Neutral'
             when rating <= 2 then 'Negative'
-            else 'Unknown'
+            else 'Unknown0'
         end                                             as rating_category,
 
         -- comment
