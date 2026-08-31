@@ -17,6 +17,9 @@ models:
         description: Total issues ever assigned to this person.
       - name: open_issues
         description: Issues currently unresolved.
+        data_tests:
+          - unique
+          - not_null
       - name: resolved_issues
         description: Issues with a non-NULL resolved timestamp.
       - name: resolution_rate_pct
